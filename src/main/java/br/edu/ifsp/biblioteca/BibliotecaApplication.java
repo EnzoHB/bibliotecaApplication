@@ -4,6 +4,7 @@ package br.edu.ifsp.biblioteca;
 // import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.edu.ifsp.biblioteca.domain.Livro;
+import br.edu.ifsp.biblioteca.repository.*;
 
 // Isso daqui é uma anotação, não um decorator. Em python, isso faz um wrapper da função que vem abaixo
 // Em java, isso daqui não tem efeito nenhum se alguém não estiver procurando por ela
@@ -20,13 +21,21 @@ public class BibliotecaApplication {
         // Comentando out o spring por hora
         // SpringApplication.run(BibliotecaApplication.class, args);
 
-        // O L na frente do integer é literal de long btw
-        Livro livro = new Livro(1L, "9788508145607", "Dom Casmurro", 2026);
-        Livro livro2 = new Livro(2L, "9788573264579", "Dom Quixote", 2026);
-        Livro livro3 = new Livro(3L, "9788573266467", "Crime e Castigo", 2026);
+        ILivroRepository repo = new LivroRepositoryEmMemoria();
 
-        System.out.println(livro);
-        System.out.println(livro2);
-        System.out.println(livro3);
+        // O L na frente do integer é literal de long btw
+        Livro livro = new Livro("9788508145607", "Dom Casmurro", 2026);
+        Livro livro2 = new Livro("9788573264579", "Dom Quixote", 2026);
+        Livro livro3 = new Livro("9788573266467", "Crime e Castigo", 2026);
+
+        repo.salvar(livro);
+        repo.salvar(livro2);
+        repo.salvar(livro3);
+
+        System.out.println(repo.listarTodos());
+        System.out.println(repo.buscarPorTitulo("dom"));
+        System.out.println(repo.buscarPorIsbn("000"));
+        // Arrow function do java
+        repo.buscarPorId(1L).ifPresent(l -> System.out.println(l.getTitulo()));
     }
 }
