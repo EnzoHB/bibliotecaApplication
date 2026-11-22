@@ -1,23 +1,26 @@
 package br.edu.ifsp.biblioteca.cli;
 
 import br.edu.ifsp.biblioteca.domain.Livro;
-import br.edu.ifsp.biblioteca.repository.LivroRepositoryEmMemoria;
-import br.edu.ifsp.biblioteca.repository.UsuarioRepositoryEmMemoria;
 import br.edu.ifsp.biblioteca.service.LivroService;
 import br.edu.ifsp.biblioteca.service.UsuarioService;
 import br.edu.ifsp.biblioteca.domain.Usuario;
 import br.edu.ifsp.biblioteca.exception.RegraDeNegocioException;
+import br.edu.ifsp.biblioteca.repository.LivroRepositoryEmMemoria;
 
 import java.util.List;
 
-public class CatalogoRunner {
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+@Component 
+public class CatalogoRunner implements CommandLineRunner {
     
     private final LivroService livroService;
     private final UsuarioService usuarioService;
 
-    public CatalogoRunner() {
-        this.livroService = new LivroService(new LivroRepositoryEmMemoria());
-        this.usuarioService = new UsuarioService(new UsuarioRepositoryEmMemoria());
+    public CatalogoRunner(LivroService livroService, UsuarioService usuarioService) {
+        this.livroService = livroService;
+        this.usuarioService = usuarioService;
     }
 
     public void run(String ...args) {

@@ -5,14 +5,14 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!--  O parent do Spring Boot cuida das VERSOES de todas as dependencias.
-         E por isso que as <dependency> abaixo nao tem <version>. 
+     <!-- O parent do Spring Boot cuida das VERSOES de todas as dependencias.
+         E por isso que as <dependency> abaixo nao tem <version>.  -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.5.0</version>
         <relativePath/>
-    </parent> -->
+    </parent>
 
     <groupId>br.edu.ifsp</groupId>
     <artifactId>biblioteca</artifactId>
@@ -26,10 +26,27 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <!-- <dependencies>
+    <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- Acesso a banco de dados com JDBC.
+             O starter-jdbc traz o DataSource (e o pool de conexoes HikariCP)
+             ja configurado pelo Spring Boot. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <!-- O banco H2: um SGBD que roda dentro da propria aplicacao.
+             scope=runtime porque nosso codigo nunca importa classes dele —
+             quem carrega o driver e o JDBC. -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -37,14 +54,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-    </dependencies> -->
+    </dependencies>
 
-    <!-- <build>
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-    </build> -->
+    </build>
 </project>

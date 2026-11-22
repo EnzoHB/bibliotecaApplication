@@ -2,8 +2,13 @@ package br.edu.ifsp.biblioteca.repository;
 
 import br.edu.ifsp.biblioteca.domain.Usuario;
 
-import java.util.*; 
+import java.util.*;
 
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Repository; 
+
+@Repository 
+@Profile("memoria")
 public class UsuarioRepositoryEmMemoria implements IUsuarioRepository {
     
     private final Map<Long, Usuario> usuarios = new HashMap<>();

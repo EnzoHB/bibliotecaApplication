@@ -4,7 +4,12 @@ import br.edu.ifsp.biblioteca.domain.Livro;
 
 import java.util.*;
 
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Repository;
+
 // Implementa a interface
+@Repository 
+@Profile("memoria")
 public class LivroRepositoryEmMemoria implements ILivroRepository {
     // Final é tipo um const
     private final Map<Long, Livro> livros = new HashMap<Long, Livro>();

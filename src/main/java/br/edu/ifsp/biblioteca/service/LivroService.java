@@ -9,6 +9,9 @@ import br.edu.ifsp.biblioteca.repository.ILivroRepository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
+@Service 
 public class LivroService {
     private final ILivroRepository livroRepository;
 

@@ -2,8 +2,8 @@ package br.edu.ifsp.biblioteca;
 
 import br.edu.ifsp.biblioteca.cli.CatalogoRunner;
 
-// import org.springframework.boot.SpringApplication;
-// import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.edu.ifsp.biblioteca.domain.Livro;
 import br.edu.ifsp.biblioteca.repository.*;
@@ -17,10 +17,11 @@ import br.edu.ifsp.biblioteca.repository.*;
 // @Configuration - esta classe pode fabricar objetos para o spring
 // @EnableAutoConfiguration - configure sozinho o que encontrar instalado. Pegar as dependências do pom.xml e se virar
 // @ComponentScan - a partir dessa classe busque todas as outras que puder encontrar
-// @SpringBootApplication 
+@SpringBootApplication 
 public class BibliotecaApplication {
     public static void main(String[] args) {
-        CatalogoRunner appExecutor = new CatalogoRunner();
-        appExecutor.run();
+        SpringApplication.run(BibliotecaApplication.class, args);
+        // CatalogoRunner appExecutor = new CatalogoRunner();
+        // appExecutor.run();
     }
 }
