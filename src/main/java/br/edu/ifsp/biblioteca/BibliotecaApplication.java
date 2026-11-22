@@ -1,5 +1,7 @@
 package br.edu.ifsp.biblioteca;
 
+import br.edu.ifsp.biblioteca.cli.CatalogoRunner;
+
 // import org.springframework.boot.SpringApplication;
 // import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -18,24 +20,7 @@ import br.edu.ifsp.biblioteca.repository.*;
 // @SpringBootApplication 
 public class BibliotecaApplication {
     public static void main(String[] args) {
-        // Comentando out o spring por hora
-        // SpringApplication.run(BibliotecaApplication.class, args);
-
-        ILivroRepository repo = new LivroRepositoryEmMemoria();
-
-        // O L na frente do integer é literal de long btw
-        Livro livro = new Livro("9788508145607", "Dom Casmurro", 2026);
-        Livro livro2 = new Livro("9788573264579", "Dom Quixote", 2026);
-        Livro livro3 = new Livro("9788573266467", "Crime e Castigo", 2026);
-
-        repo.salvar(livro);
-        repo.salvar(livro2);
-        repo.salvar(livro3);
-
-        System.out.println(repo.listarTodos());
-        System.out.println(repo.buscarPorTitulo("dom"));
-        System.out.println(repo.buscarPorIsbn("000"));
-        // Arrow function do java
-        repo.buscarPorId(1L).ifPresent(l -> System.out.println(l.getTitulo()));
+        CatalogoRunner appExecutor = new CatalogoRunner();
+        appExecutor.run();
     }
 }

@@ -5,6 +5,7 @@ import br.edu.ifsp.biblioteca.domain.Usuario;
 import br.edu.ifsp.biblioteca.exception.RegraDeNegocioException;
 
 import java.util.Optional;
+import java.util.List;
 
 public class UsuarioService {
     private final IUsuarioRepository usuarioRepository;
@@ -42,5 +43,9 @@ public class UsuarioService {
         }
 
         throw new RegraDeNegocioException("Usuário não encontraodo: " + id);
+    }
+
+    public List<Usuario> listarTodos() {
+        return this.usuarioRepository.listarTodos();
     }
 }
