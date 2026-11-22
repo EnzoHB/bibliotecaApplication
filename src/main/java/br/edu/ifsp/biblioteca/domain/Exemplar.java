@@ -1,5 +1,7 @@
 package br.edu.ifsp.biblioteca.domain;
 
+import br.edu.ifsp.biblioteca.exception.RegraDeNegocioException;
+
 public class Exemplar {
     private Long id;
     private String codigo;
@@ -49,6 +51,19 @@ public class Exemplar {
         this.livro = livro;
     }
 
-    
-    
+    public void devolver() {
+        this.status = EStatusExemplar.DISPONIVEL;
+    }
+
+    public void emprestar() {
+        if (this.status == EStatusExemplar.EMPRESTADO) {
+            throw new RegraDeNegocioException("Exemplo " + this.codigo + " já está emprestado!!!");
+        }
+
+        this.status = EStatusExemplar.EMPRESTADO;
+    }
+
+    public boolean estaDisponivel() {
+        return this.status == EStatusExemplar.DISPONIVEL;
+    }
 }

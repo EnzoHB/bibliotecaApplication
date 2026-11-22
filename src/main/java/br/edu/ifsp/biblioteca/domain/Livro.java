@@ -62,4 +62,12 @@ public class Livro {
     public void adicionarAutor(Autor autor) {
         this.autores.add(autor);
     }
+
+    public List<Autor> getAutores() {
+        return this.autores;
+    }
+
+    public List<Exemplar> getExemplares() {
+        return this.listaDeExemplares;
+    }
 }
