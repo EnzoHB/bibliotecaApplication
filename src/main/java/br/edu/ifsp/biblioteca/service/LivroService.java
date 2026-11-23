@@ -30,7 +30,7 @@ public class LivroService {
             throw new RegraDeNegocioException("ISBN é obrigatório");
         }
 
-        if (livro.getAnoPublicacao() <= 0) {
+        if (livro.getAnoPublicacao() != null && livro.getAnoPublicacao() <= 0) {
             throw new RegraDeNegocioException("O ano de publicacao deve ser maior que 0");
         }
 
