@@ -33,14 +33,22 @@ public class LivroRepositoryJdbc implements ILivroRepository {
         try(Connection conexao = this.dataSource.getConnection()) {
             conexao.setAutoCommit(false);
 
-            if (livro.getId() == null) {
-                this.inserirLivro(conexao, livro);
-            } else {
-                this.atualizarLivro(conexao, livro);
-            }
+            try {
 
-            this.salvarAutores(conexao, livro);
-            this.salvarExemplares(conexao, livro);
+                if (livro.getId() == null) {
+                    this.inserirLivro(conexao, livro);
+                } else {
+                    this.atualizarLivro(conexao, livro);
+                }
+                
+                this.salvarAutores(conexao, livro);
+                this.salvarExemplares(conexao, livro);
+                conexao.commit();
+
+            } catch(SQLException erro) {
+                conexao.rollback();
+                throw erro;
+            }
         } catch (SQLException erro) {
             throw new IllegalStateException("Falha ao salvar o livro", erro);
         }
@@ -71,7 +79,7 @@ public class LivroRepositoryJdbc implements ILivroRepository {
     }
 
     private void atualizarLivro(Connection conexao, Livro livro) throws SQLException {
-        String sql = "UPDATE livro SET isbn = ?, titulo = ?, ano_publicao = ? WHERE id = ?";
+        String sql = "UPDATE livro SET isbn = ?, titulo = ?, ano_publicacao = ? WHERE id = ?";
 
         try (PreparedStatement comando = conexao.prepareStatement(sql)) {
             comando.setString(1, livro.getIsbn());
@@ -85,6 +93,7 @@ public class LivroRepositoryJdbc implements ILivroRepository {
     private void salvarAutores(Connection conexao, Livro livro) throws SQLException {
         for (Autor autor : livro.getAutores()) {
             if (autor.getId() == null) {
+                // INSERT
                 String sql = "INSERT INTO autor(nome) VALUES (?)";
 
                 try (
@@ -99,10 +108,18 @@ public class LivroRepositoryJdbc implements ILivroRepository {
                         }
                     }
                 }
-            }
+            } else {
+                // UPDATE
+                String sql = "UPDATE autor SET nome = ? WHERE id = ?";
 
-            // Não testou se a relação já existe, duplica a relação toda vez
-            String sqlTblIntermediaria = "INSERT INTO livro_autor(livro_id, autor_id) VALUES (?, ?)";
+                try (PreparedStatement comando = conexao.prepareStatement(sql)) {
+                    comando.setString(1, autor.getNome());
+                    comando.setLong(2, autor.getId());
+                    comando.executeUpdate();
+                }
+            }
+            // UPSERT
+            String sqlTblIntermediaria = "MERGE INTO livro_autor(livro_id, autor_id) VALUES (?, ?)";
 
             try (PreparedStatement comando = conexao.prepareStatement(sqlTblIntermediaria)) {
                 comando.setLong(1, livro.getId());
@@ -117,7 +134,7 @@ public class LivroRepositoryJdbc implements ILivroRepository {
             if (exemplar.getId() == null) {
                 String sql = "INSERT INTO exemplar(codigo, status, livro_id) VALUES (?, ?, ?)";
 
-                try (PreparedStatement comando = conexao.prepareStatement(sql)) {
+                try (PreparedStatement comando = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                     comando.setString(1, exemplar.getCodigo());
                     comando.setString(2, exemplar.getStatus().name());
                     comando.setLong(3, livro.getId());
