@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service 
 public class LivroService {
@@ -33,18 +34,18 @@ public class LivroService {
             throw new RegraDeNegocioException("O ano de publicacao deve ser maior que 0");
         }
 
-        Optional<Livro> livroJaCadastradoOptional = this.livroRepository.buscarPorIsbn(livro.getIsbn());
+        Optional<Livro> livroJaCadastradoOptional = this.livroRepository.findByIsbn(livro.getIsbn());
 
         if (livroJaCadastradoOptional.isPresent()) {
             throw new RegraDeNegocioException("Já existe um livro cadastrado com o ISBN");
         }
 
-        Livro livroCadastrado = this.livroRepository.salvar(livro);
+        Livro livroCadastrado = this.livroRepository.save(livro);
         return livroCadastrado;
     }
 
     public Livro buscarPorId(Long id) {
-        Optional<Livro> livroOptinal = this.livroRepository.buscarPorId(id);
+        Optional<Livro> livroOptinal = this.livroRepository.findById(id);
 
         if (livroOptinal.isPresent()) {
             return livroOptinal.get();
@@ -53,23 +54,25 @@ public class LivroService {
         throw new RegraDeNegocioException("Livro não encontrado: " + id);
     }
 
+    @Transactional
     public Livro adicionarAutor(Long livroId, String nomeAutor) {
         Livro livroEncontrado = this.buscarPorId(livroId);
         livroEncontrado.adicionarAutor(new Autor(nomeAutor));
-        return this.livroRepository.salvar(livroEncontrado);
+        return this.livroRepository.save(livroEncontrado);
     }
 
     public List<Livro> buscarPorTitulo(String trechoDoTitulo) {
-        return this.livroRepository.buscarPorTitulo(trechoDoTitulo);
+        return this.livroRepository.findByTituloContainingIgnoreCase(trechoDoTitulo);
     }
 
     public List<Livro> listarTodos() {
-        return this.livroRepository.listarTodos();
+        return this.livroRepository.findAll();
     }
 
+    @Transactional
     public Livro adicionarExemplar(Long livroId, String codigoDoExemplar) {
         Livro livro = this.buscarPorId(livroId);
         livro.adicionarExemplar(new Exemplar(codigoDoExemplar, livro));
-        return this.livroRepository.salvar(livro);
+        return this.livroRepository.save(livro);
     }
 }

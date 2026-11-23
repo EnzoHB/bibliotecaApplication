@@ -28,11 +28,11 @@ public class UsuarioService {
         }
 
         this.validarEmail(usuario.getEmail());
-        return this.usuarioRepository.salvar(usuario);
+        return this.usuarioRepository.save(usuario);
     }
 
     private void validarEmail(String email) {
-        Optional<Usuario> usuarioOptional = this.usuarioRepository.buscarPorEmail(email);
+        Optional<Usuario> usuarioOptional = this.usuarioRepository.findByEmailIgnoreCase(email);
 
         if (usuarioOptional.isPresent()) {
             throw new RegraDeNegocioException("Já existe um usuário cadastrado com o e-mail: " + email);
@@ -40,7 +40,7 @@ public class UsuarioService {
     }
 
     public Usuario buscarPorId(Long id) {
-        Optional<Usuario> usuarioOptional = this.usuarioRepository.buscarPorId(id);
+        Optional<Usuario> usuarioOptional = this.usuarioRepository.findById(id);
 
         if (usuarioOptional.isPresent()) {
             return usuarioOptional.get();
@@ -50,6 +50,6 @@ public class UsuarioService {
     }
 
     public List<Usuario> listarTodos() {
-        return this.usuarioRepository.listarTodos();
+        return this.usuarioRepository.findAll();
     }
 }

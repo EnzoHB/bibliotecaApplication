@@ -1,23 +1,52 @@
 package br.edu.ifsp.biblioteca.domain;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity 
+@Table(name="livro")
 public class Livro {
 
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable=false, unique=true, length=20)
     private String isbn;
+
+    @Column(nullable=false, length=200)
     private String titulo;
+
+    @Column(name="ano_publicacao")
     private Integer anoPublicacao;
-    private List<Exemplar> listaDeExemplares;
-    private List<Autor> autores;
+
+    @OneToMany(
+        mappedBy = "livro", 
+        cascade = CascadeType.ALL, 
+        orphanRemoval = true, 
+        fetch = FetchType.LAZY
+    )
+    // Esses campos já precisam estar aqui para a reflection do Java. Ver abaixo
+    private List<Exemplar> listaDeExemplares = new ArrayList<>();
+
+    @ManyToMany(cascade= { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+        name = "livro_autor", 
+        joinColumns = @JoinColumn(name="livro_id"),
+        inverseJoinColumns = @JoinColumn(name="autor_id")
+    )
+    private List<Autor> autores = new ArrayList<>();
+
+    // Chama o construtor vazio e preenche os campos 1 a um com dados do banco via relfection API
+    // Se não tiver um overload signature vazio, não tem como fazer isso
+    public Livro() {};
 
     public Livro(String isbn, String titulo, Integer anoPublicacao) {
         this.isbn = isbn;
         this.titulo = titulo;
         this.anoPublicacao = anoPublicacao;
-        this.listaDeExemplares = new ArrayList<>();
-        this.autores = new ArrayList<>();
     }
 
     // Para não criar os getters e setters na mão dentro do vs code, podemos utilizar o atalho em

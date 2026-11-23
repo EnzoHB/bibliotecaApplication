@@ -5,7 +5,6 @@ import br.edu.ifsp.biblioteca.service.LivroService;
 import br.edu.ifsp.biblioteca.service.UsuarioService;
 import br.edu.ifsp.biblioteca.domain.Usuario;
 import br.edu.ifsp.biblioteca.exception.RegraDeNegocioException;
-import br.edu.ifsp.biblioteca.repository.LivroRepositoryEmMemoria;
 
 import java.util.List;
 
